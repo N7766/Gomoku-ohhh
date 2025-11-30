@@ -10,15 +10,19 @@
       --board-size: clamp(400px, var(--board-size-raw), 720px);
       --label-width: 64px;
       --gap-size: 12px;
-      --panel-bg: #fffdf7;
+      --panel-bg: #fff9f0;
       --accent: #c77b30;
       --text-dark: #2f2f2f;
+      --panel-shadow: 0 12px 28px rgba(76, 52, 26, 0.16);
+      --status-bg: #fff2de;
+      --message-bg: #fff4d3;
     }
     * {
       box-sizing: border-box;
     }
     body {
       margin: 0;
+      padding: 0 16px 48px;
       font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
       background: radial-gradient(circle at top, #fffdf1, #f2e2cf);
       color: var(--text-dark);
@@ -32,17 +36,19 @@
       font-weight: 600;
     }
     main.page-wrapper {
-      width: min(1200px, 95vw);
+      width: min(1200px, 100%);
       margin: 0 auto 40px;
       display: flex;
       flex-wrap: wrap;
-      gap: 24px;
+      gap: 32px;
       justify-content: center;
       align-items: flex-start;
     }
     .board-section {
       flex: 1 1 560px;
       min-width: 420px;
+      display: flex;
+      justify-content: center;
     }
     .board-wrapper {
       display: flex;
@@ -95,12 +101,13 @@
     }
     .board-container {
       width: var(--board-size);
+      min-width: 400px;
       aspect-ratio: 1 / 1;
       border: 10px solid #b9823c;
-      border-radius: 14px;
+      border-radius: 16px;
       background: #f8e0b2;
       position: relative;
-      box-shadow: 0 16px 35px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 16px 35px rgba(0, 0, 0, 0.18);
     }
     canvas {
       width: 100%;
@@ -110,21 +117,22 @@
       border-radius: 6px;
     }
     .control-panel {
-      flex: 0 0 300px;
-      min-width: 260px;
+      flex: 0 0 320px;
+      min-width: 280px;
       background: var(--panel-bg);
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 18px 35px rgba(0, 0, 0, 0.15);
+      border-radius: 24px;
+      padding: 28px 28px 24px;
+      box-shadow: var(--panel-shadow);
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 18px;
     }
     .control-panel h2 {
       margin: 0;
-      font-size: 1.4rem;
-      color: #5c3b17;
-      letter-spacing: 2px;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #4b2806;
+      letter-spacing: 3px;
     }
     .field {
       display: flex;
@@ -137,90 +145,141 @@
     }
     select,
     button {
-      padding: 10px 12px;
+      width: 100%;
+      padding: 12px 14px;
       font-size: 1rem;
-      border-radius: 10px;
-      border: 2px solid #d3b48a;
+      border-radius: 14px;
+      border: 2px solid #e7c8a1;
       background: #fff9f1;
       color: var(--text-dark);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
     }
     select:focus,
     button:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(199, 123, 48, 0.25);
+      box-shadow: 0 0 0 2px rgba(199, 123, 48, 0.2);
+    }
+    .button-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .button-group button {
+      flex: 1 1 150px;
+      min-width: 150px;
+      width: auto;
     }
     button {
       font-weight: 600;
-      background: linear-gradient(135deg, #f3c892, #e8a65c);
-      color: #4a2a08;
+      background: linear-gradient(120deg, #f3c88f, #e5a55e);
+      color: #4c2b06;
       border: none;
       cursor: pointer;
     }
     button:hover:not(:disabled) {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(61, 32, 3, 0.25);
     }
     button:active:not(:disabled) {
-      transform: scale(0.98);
+      transform: translateY(0);
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
     }
     button:disabled {
+      background: #e1d3c1;
+      color: #8f8270;
       cursor: not-allowed;
-      opacity: 0.5;
       box-shadow: none;
-      background: #e0d6c5;
-      color: #8f846f;
+      transform: none;
     }
-    .button-group {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .status-block {
+    .status-card {
       background: #fff7ea;
       border: 1px solid rgba(92, 59, 23, 0.12);
-      border-radius: 12px;
-      padding: 12px;
+      border-radius: 18px;
+      padding: 16px 18px;
       line-height: 1.6;
       font-size: 0.95rem;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
-    .status-block p {
-      margin: 4px 0;
+    .status-card p {
+      margin: 0;
     }
-    .message {
-      min-height: 48px;
-      padding: 12px;
-      background: #fef0d9;
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 12px;
       border-radius: 12px;
+      background: rgba(255, 255, 255, 0.55);
+    }
+    .status-row .status-label {
+      font-weight: 600;
+      color: #5c3b17;
+      flex-shrink: 0;
+    }
+    .status-row .status-value {
+      color: #7d6240;
+      text-align: right;
+      flex: 1;
+    }
+    .status-row.is-finished {
+      background: rgba(255, 203, 143, 0.35);
+      border: 1px solid rgba(199, 123, 48, 0.4);
+    }
+    .status-row.is-finished .status-value {
+      font-weight: 700;
+      color: #a15000;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 4px 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      justify-content: center;
+    }
+    .ai-status-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ai-loader {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid rgba(199, 123, 48, 0.2);
+      border-top-color: #c77b30;
+      animation: spin 0.8s linear infinite;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .ai-status-wrap.thinking .ai-loader {
+      opacity: 1;
+    }
+    .message-bar {
+      min-height: 48px;
+      padding: 14px 16px;
+      background: var(--message-bg);
+      border-radius: 14px;
       border: 1px dashed rgba(199, 123, 48, 0.4);
       line-height: 1.5;
+      font-size: 0.92rem;
+      color: #6b4c2b;
+      opacity: 0.92;
+      transition: opacity 0.4s ease;
     }
-    .legend {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      flex-wrap: wrap;
+    .message-bar.message-flash {
+      animation: messageFade 3s ease;
+    }
+    .legend-note {
+      width: 100%;
       font-size: 0.9rem;
-      color: #5f4b2a;
-    }
-    .legend span {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .chip {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
-    }
-    .chip.black {
-      background: #2b1c0f;
-    }
-    .chip.white {
-      background: #f4f4f4;
-      border: 1px solid #d2d2d2;
+      color: #8a6f4a;
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(199, 123, 48, 0.2);
+      border-radius: 12px;
+      padding: 10px 14px;
+      line-height: 1.4;
     }
     @keyframes winGlow {
       0% {
@@ -233,11 +292,40 @@
         box-shadow: 0 0 6px rgba(255, 223, 120, 0.8);
       }
     }
+    @keyframes spin {
+      from {
+        transform: rotate(0turn);
+      }
+      to {
+        transform: rotate(1turn);
+      }
+    }
+    @keyframes messageFade {
+      0% {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      15% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      100% {
+        opacity: 0.9;
+      }
+    }
     @media (max-width: 900px) {
-      .control-panel {
-        flex: 1 1 100%;
+      main.page-wrapper {
+        flex-direction: column;
+        align-items: center;
       }
       .board-section {
+        width: 100%;
+      }
+      .control-panel {
+        width: min(520px, 95%);
+        flex: 1 1 auto;
+      }
+      .button-group button {
         flex: 1 1 100%;
       }
     }
@@ -266,10 +354,7 @@
     </section>
     <aside class="control-panel">
       <h2>控制面板</h2>
-      <div class="legend">
-        <span><span class="chip black"></span>黑棋：玩家/先手</span>
-        <span><span class="chip white"></span>白棋：对手/AI</span>
-      </div>
+      <p class="legend-note">黑棋：玩家/先手 · 白棋：对手/AI</p>
       <div class="field">
         <label for="modeSelect">对战模式</label>
         <select id="modeSelect">
@@ -281,14 +366,32 @@
         <button id="restartBtn">重新开始</button>
         <button id="undoBtn" disabled>悔棋</button>
       </div>
-      <div class="status-block">
-        <p><strong>当前模式：</strong><span id="modeText">玩家 vs AI（玩家执黑）</span></p>
-        <p><strong>当前轮到：</strong><span id="turnText">黑棋</span></p>
-        <p><strong>已下总步数：</strong><span id="moveCount">0</span></p>
-        <p><strong>AI 状态：</strong><span id="aiStatus">等待玩家落子</span></p>
-        <p><strong>对局结果：</strong><span id="resultText">进行中</span></p>
+      <div class="status-card">
+        <p class="status-row">
+          <span class="status-label">当前模式：</span>
+          <span class="status-value" id="modeText">玩家 vs AI（玩家执黑）</span>
+        </p>
+        <p class="status-row">
+          <span class="status-label">当前轮到：</span>
+          <span class="status-value" id="turnText">黑棋</span>
+        </p>
+        <p class="status-row">
+          <span class="status-label">已下总步数：</span>
+          <span class="status-value" id="moveCount">0</span>
+        </p>
+        <p class="status-row" id="aiStatusRow">
+          <span class="status-label">AI 状态：</span>
+          <span class="status-value ai-status-wrap" id="aiStatusWrap">
+            <span id="aiStatus">等待玩家落子</span>
+            <span class="ai-loader" aria-hidden="true"></span>
+          </span>
+        </p>
+        <p class="status-row" id="resultRow">
+          <span class="status-label">对局结果：</span>
+          <span class="status-value" id="resultText">进行中</span>
+        </p>
       </div>
-      <div class="message" id="messageArea">提示：点击棋盘任意空交叉点落子。</div>
+      <div class="message-bar" id="messageArea">提示：点击棋盘任意空交叉点落子。</div>
     </aside>
   </main>
   <script>
@@ -311,7 +414,9 @@
       const turnText = document.getElementById("turnText");
       const moveCountText = document.getElementById("moveCount");
       const aiStatusText = document.getElementById("aiStatus");
+      const aiStatusWrap = document.getElementById("aiStatusWrap");
       const resultText = document.getElementById("resultText");
+      const resultRow = document.getElementById("resultRow");
       const messageArea = document.getElementById("messageArea");
 
       /**
@@ -416,6 +521,9 @@
         } else {
           aiStatusText.textContent = "当前为人人对战模式";
         }
+        if (aiStatusWrap) {
+          aiStatusWrap.classList.toggle("thinking", state.mode === "pvai" && state.aiThinking);
+        }
         if (state.gameOver) {
           if (state.winner === BLACK) {
             resultText.textContent = "黑棋获胜！请点击重新开始。";
@@ -426,6 +534,13 @@
           }
         } else {
           resultText.textContent = "进行中";
+        }
+        if (resultRow) {
+          if (state.gameOver && (state.winner === BLACK || state.winner === WHITE)) {
+            resultRow.classList.add("is-finished");
+          } else {
+            resultRow.classList.remove("is-finished");
+          }
         }
         messageArea.textContent = state.message;
         undoBtn.disabled = state.moves.length === 0 || state.aiThinking;
@@ -439,6 +554,10 @@
       function setMessage(text) {
         state.message = text;
         messageArea.textContent = text;
+        messageArea.classList.remove("message-flash");
+        // 触发重绘以重启动画
+        void messageArea.offsetWidth;
+        messageArea.classList.add("message-flash");
       }
 
       /**
